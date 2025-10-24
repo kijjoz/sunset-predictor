@@ -1,58 +1,67 @@
-import requests
 import os
+import requests
 from datetime import datetime, timedelta
+from sunset_calc import get_sunset_time
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-def get_weather(lat=None, lon=None, city=None, sunset_time=None):
+def get_weather(lat=48.72, lon=21.26, target_date=None):
     """
-    Získa predpoveď počasia pre dané GPS súradnice v čase západu slnka.
-    Ak sunset_time nie je zadaný, použije sa aktuálny čas (fallback).
+    Získa predpoveď počasia pre dané súradnice.
+    Vyberie čas najbližší k západu slnka.
     """
-
     if not API_KEY:
-        print("Chýba OPENWEATHER_API_KEY")
+        print("CHYBA: OPENWEATHER_API_KEY nie je nastavený.")
         return None
-
-    # Kontrola vstupov
-    if not lat or not lon:
-        print("Chýbajú súradnice pre predpoveď počasia")
-        return None
-
-    # URL pre 3-hodinovú predpoveď
-    url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_KEY}&units=metric&lang=sk"
 
     try:
-        response = requests.get(url, timeout=8)
-        data = response.json()
+        url = f"https://api.openweathermap.org/data/2.5/forecast"
+        params = {
+            "lat": lat,
+            "lon": lon,
+            "appid": API_KEY,
+            "units": "metric",
+            "lang": "sk"
+        }
 
-        if "cod" in data and int(data["cod"]) != 200:
-            print("OpenWeather API error:", data.get("message", ""))
+        print(f"Volám OpenWeather Forecast API pre {lat}, {lon}")
+        res = requests.get(url, params=params, timeout=10)
+        data = res.json()
+        print("Odpoveď API:", data.get("cod"), data.get("message", ""))
+
+        if data.get("cod") != "200" or "list" not in data:
+            print("Chyba pri čítaní dát:", data)
             return None
 
-        # Ak nepoznáme sunset_time (napr. fallback), použijeme aktuálny čas
-        if sunset_time is None:
-            sunset_time = datetime.utcnow()
+        # Ak cieľový dátum nie je zadaný → dnešok
+        if target_date is None:
+            target_date = datetime.now()
 
-        # Najdi predpoveď, ktorá je najbližšie k času západu
-        closest_forecast = min(
-            data["list"],
-            key=lambda e: abs(datetime.fromtimestamp(e["dt"]) - sunset_time)
-        )
+        # Získaj čas západu slnka pre dané súradnice
+        sunset = get_sunset_time(lat, lon, target_date)
+        sunset_timestamp = sunset.timestamp()
 
-        # Vrátime relevantné dáta
-        main = closest_forecast["main"]
-        weather = closest_forecast["weather"][0]
-        clouds = closest_forecast["clouds"]["all"]
+        # Nájdeme čas v predpovedi najbližší k západu
+        closest = min(data["list"], key=lambda x: abs(x["dt"] - sunset_timestamp))
+
+        main = closest["main"]
+        weather = closest["weather"][0]
+        clouds = closest["clouds"]["all"]
+        humidity = main["humidity"]
+        description = weather["description"]
+
+        print(f"Vybraná predpoveď: {closest['dt_txt']} ({description}, {clouds}% oblačnosť)")
 
         return {
+            "temperature": main["temp"],
+            "humidity": humidity,
             "clouds": clouds,
-            "humidity": main["humidity"],
-            "weather": weather["main"],
-            "description": weather["description"],
-            "forecast_time": datetime.fromtimestamp(closest_forecast["dt"]).strftime("%H:%M")
+            "description": description,
+            "lat": lat,
+            "lon": lon,
+            "city": data["city"]["name"]
         }
 
     except Exception as e:
-        print("Chyba pri načítaní predpovede počasia:", e)
+        print("Chyba pri načítaní počasia:", e)
         return None
