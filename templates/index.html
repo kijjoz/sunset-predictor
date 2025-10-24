@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-    <meta charset="UTF-8">
-    <title>Sunset Predictor – Košice</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Predpoveď západu slnka</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Sunset Predictor 🌇</h1>
-    <div id="output">
-        <p>Načítavam údaje o západe slnka...</p>
-    </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <h1>Predpoveď západu slnka</h1>
+
+  <div id="controls">
+    <label for="city">Mesto:</label>
+    <select id="city">
+      <option value="Kosice">Košice</option>
+      <option value="Bratislava">Bratislava</option>
+      <option value="Presov">Prešov</option>
+      <option value="Zilina">Žilina</option>
+      <option value="Poprad">Poprad</option>
+    </select>
+
+    <label for="day">Deň:</label>
+    <select id="day">
+      <option value="0">Dnes</option>
+      <option value="1">Zajtra</option>
+    </select>
+
+    <button id="check">Zistiť</button>
+  </div>
+
+  <div id="output">Načítavam údaje...</div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
