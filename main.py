@@ -16,15 +16,21 @@ def home():
 def get_sunset_prediction():
     lat = request.args.get("lat", type=float)
     lon = request.args.get("lon", type=float)
-
     if lat is None or lon is None:
-        lat, lon = 48.72, 21.26
+        lat, lon = 48.72, 21.26  # Košice
+
+    print(f"→ Požiadavka pre polohu: {lat}, {lon}")
 
     weather_data = get_weather(lat=lat, lon=lon)
     if not weather_data:
+        print("❌ Nepodarilo sa načítať počasie")
         return jsonify({"error": "Nepodarilo sa získať údaje o počasí"}), 500
 
+    print("✅ Dáta o počasí prijaté:", weather_data)
+
     sunset_time = get_sunset_time(lat=lat, lon=lon)
+    print("🌇 Čas západu:", sunset_time)
+
     score, verdict = evaluate_sunset(weather_data)
     colors = describe_colors(weather_data)
     today = datetime.now().strftime("%d.%m.%Y")
@@ -40,7 +46,6 @@ def get_sunset_prediction():
         "weather_data": weather_data
     })
 
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=True)
