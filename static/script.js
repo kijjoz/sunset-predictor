@@ -8,6 +8,18 @@ function loadSunset(city, dayOffset) {
         document.getElementById("output").innerHTML =
           "<p>Chyba: " + data.error + "</p>";
         return;
+      document.body.animate(
+  [
+    { background: document.body.style.background },
+    { background: gradient }
+  ],
+  {
+    duration: 1500,
+    fill: "forwards",
+    easing: "ease-in-out"
+  }
+);
+
       }
 
       // Nastavenie pozadia podľa predpokladaných farieb oblohy
