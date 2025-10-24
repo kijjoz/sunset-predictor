@@ -1,18 +1,23 @@
-import requests
-import os
+import requests, os
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-def get_weather(city="Kosice"):
+def get_weather(lat=None, lon=None, city=None):
     if not API_KEY:
         print("Chýba OPENWEATHER_API_KEY")
         return None
 
-    URL = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=sk"
+    if lat and lon:
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric&lang=sk"
+    elif city:
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=sk"
+    else:
+        return None
 
     try:
-        response = requests.get(URL, timeout=5)
+        response = requests.get(url, timeout=5)
         data = response.json()
+
         if "cod" in data and data["cod"] != 200:
             print("OpenWeather API error:", data.get("message", ""))
             return None
@@ -24,7 +29,6 @@ def get_weather(city="Kosice"):
             "weather": data.get("weather", [{}])[0].get("main", "Clear"),
             "description": data.get("weather", [{}])[0].get("description", "")
         }
-
     except Exception as e:
         print("Chyba pri načítaní počasia:", e)
         return None

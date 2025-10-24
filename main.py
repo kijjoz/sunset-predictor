@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from datetime import datetime, timedelta
+from datetime import datetime
 from predictor import evaluate_sunset
 from sunset_calc import get_sunset_time
 from color_description import describe_colors
@@ -14,21 +14,24 @@ def home():
 
 @app.route("/api/sunset")
 def get_sunset_prediction():
-    city = request.args.get("city", "Kosice")
-    day_offset = int(request.args.get("day", 0))
+    lat = request.args.get("lat", type=float)
+    lon = request.args.get("lon", type=float)
 
-    weather_data = get_weather(city)
+    # Ak chýba poloha, použijeme default (Košice)
+    if lat is None or lon is None:
+        lat, lon = 48.72, 21.26
+
+    weather_data = get_weather(lat=lat, lon=lon)
     if not weather_data:
         return jsonify({"error": "Nepodarilo sa získať údaje o počasí"}), 500
 
-    target_date = datetime.now() + timedelta(days=day_offset)
-    sunset_time = get_sunset_time(city, target_date)
+    sunset_time = get_sunset_time(lat=lat, lon=lon)
     score, verdict = evaluate_sunset(weather_data)
     colors = describe_colors(weather_data)
-    today = target_date.strftime("%d.%m.%Y")
+    today = datetime.now().strftime("%d.%m.%Y")
 
     return jsonify({
-        "location": city,
+        "location": f"{round(lat, 2)}, {round(lon, 2)}",
         "date": today,
         "sunset_time": sunset_time.strftime("%H:%M"),
         "verdict": verdict,
