@@ -1,10 +1,10 @@
-import os
 from datetime import datetime
 from flask import Flask, render_template, jsonify
 from predictor import evaluate_sunset
 from sunset_calc import get_sunset_time
 from color_description import describe_colors
 from weather_service import get_weather
+import os
 
 app = Flask(__name__)
 
@@ -23,9 +23,7 @@ def get_sunset_prediction():
     colors = describe_colors(weather_data)
     today = datetime.now().strftime("%d.%m.%Y")
 
-    print("Predikované farby:", colors)
-
-        return jsonify({
+    return jsonify({
         "location": "Košice",
         "date": today,
         "sunset_time": sunset_time.strftime("%H:%M"),
@@ -37,8 +35,6 @@ def get_sunset_prediction():
     })
 
 
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
-
