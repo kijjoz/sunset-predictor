@@ -8,27 +8,10 @@
 </head>
 <body>
   <h1>Predpoveď západu slnka</h1>
+  <p>Automaticky zisťuje tvoju polohu pre čo najpresnejší výsledok.</p>
 
-  <div id="controls">
-    <label for="city">Mesto:</label>
-    <select id="city">
-      <option value="Kosice">Košice</option>
-      <option value="Bratislava">Bratislava</option>
-      <option value="Presov">Prešov</option>
-      <option value="Zilina">Žilina</option>
-      <option value="Poprad">Poprad</option>
-    </select>
-
-    <label for="day">Deň:</label>
-    <select id="day">
-      <option value="0">Dnes</option>
-      <option value="1">Zajtra</option>
-    </select>
-
-    <button id="check">Zistiť</button>
-  </div>
-
-  <div id="output">Načítavam údaje...</div>
+  <button id="check">Zistiť</button>
+  <div id="output">Načítavam údaje o západe slnka...</div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
