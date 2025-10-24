@@ -17,11 +17,9 @@ def get_sunset_prediction():
     lat = request.args.get("lat", type=float)
     lon = request.args.get("lon", type=float)
 
-    # Ak chýba poloha, použijeme default (Košice)
     if lat is None or lon is None:
         lat, lon = 48.72, 21.26
 
-    sunset_time = get_sunset_time(lat=lat, lon=lon)
     weather_data = get_weather(lat=lat, lon=lon)
     if not weather_data:
         return jsonify({"error": "Nepodarilo sa získať údaje o počasí"}), 500
