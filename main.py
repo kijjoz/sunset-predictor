@@ -21,7 +21,8 @@ def get_sunset_prediction():
     if lat is None or lon is None:
         lat, lon = 48.72, 21.26
 
-    weather_data = get_weather(lat=lat, lon=lon)
+    sunset_time = get_sunset_time(lat=lat, lon=lon)
+    weather_data = get_weather(lat=lat, lon=lon, sunset_time=sunset_time)
     if not weather_data:
         return jsonify({"error": "Nepodarilo sa získať údaje o počasí"}), 500
 
