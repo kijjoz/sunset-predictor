@@ -1,56 +1,56 @@
-/* === Všeobecné === */
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom right, #ffb347, #ffcc33);
-  transition: background 2s ease-in-out;
-  min-height: 100vh;
-  color: #222;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* 💡 zakáže horizontálny aj vertikálny posun */
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  overflow-x: hidden; /* 💡 zabráni horizontálnemu posunu */
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(to bottom right, #ffb347, #ffcc33);
+  color: #222;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-/* === Nadpis a popis === */
+/* ====== Nadpis + popis ====== */
 h1 {
-  color: #3a2f1b;
-  text-align: center;
-  margin-top: 40px;
+  font-size: 2rem;
   margin-bottom: 5px;
-  font-size: clamp(1.6rem, 4vw, 2rem);
+  color: #3a2f1b;
 }
 
 p.description {
-  text-align: center;
-  margin: 0 auto 10px;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-size: 1rem;
   color: #4b3e2a;
-  max-width: 90%;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding: 0 10px;
 }
 
-/* === Výstupný box === */
+/* ====== Výstupný box ====== */
 #output {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  text-align: center;
-  width: min(90%, 400px);
-  margin: 25px auto;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  width: 320px;
+  max-width: 90%;
   line-height: 1.5;
 }
 
-/* === Tlačidlo === */
+/* ====== Tlačidlo ====== */
 button {
   background: #ffc107;
   color: #222;
   border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
+  border-radius: 8px;
+  padding: 10px 18px;
   font-weight: bold;
   cursor: pointer;
+  margin-bottom: 20px;
   transition: background 0.2s ease;
 }
 
@@ -58,27 +58,22 @@ button:hover {
   background: #e0a800;
 }
 
-/* === Mobilné optimalizácie === */
+/* ====== Pre mobily ====== */
 @media (max-width: 600px) {
   body {
-    padding: 0 10px;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  p.description {
+    font-size: 0.9rem;
   }
 
   #output {
     width: 100%;
-    margin-top: 15px;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-  }
-}
-
-/* === Oprava dolného rezu pre Android/iOS === */
-@supports (-webkit-touch-callout: none) {
-  html, body {
-    min-height: -webkit-fill-available;
+    max-width: 360px;
   }
 }
