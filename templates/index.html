@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="sk">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Predpoveď západu slnka</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
 <body>
   <h1>Predpoveď západu slnka</h1>
-  <p>Automaticky zisťuje tvoju polohu pre čo najpresnejší výsledok.</p>
+  <p class="description">
+    Automaticky zisťuje tvoju polohu pre čo najpresnejší výsledok.
+  </p>
 
-  <button id="check">Zistiť</button>
-  <div id="output">Načítavam údaje o západe slnka...</div>
+  <button id="check">Načítať predpoveď</button>
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <div id="output">
+    <p>Načítavam údaje o západe slnka...</p>
+  </div>
+
+  <script src="/static/script.js"></script>
 </body>
-</html>

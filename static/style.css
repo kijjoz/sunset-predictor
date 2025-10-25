@@ -1,4 +1,4 @@
-/* ===== Všeobecné nastavenia ===== */
+/* === Všeobecné === */
 html, body {
   margin: 0;
   padding: 0;
@@ -10,9 +10,10 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden; /* 💡 zabráni horizontálnemu posunu */
 }
 
-/* ===== Nadpis + popis ===== */
+/* === Nadpis a popis === */
 h1 {
   color: #3a2f1b;
   text-align: center;
@@ -23,12 +24,13 @@ h1 {
 
 p.description {
   text-align: center;
-  margin-top: 0;
+  margin: 0 auto 10px;
   font-size: clamp(0.9rem, 2vw, 1rem);
   color: #4b3e2a;
+  max-width: 90%;
 }
 
-/* ===== Hlavný výstupný blok ===== */
+/* === Výstupný box === */
 #output {
   background: rgba(255, 255, 255, 0.92);
   padding: 20px;
@@ -40,7 +42,7 @@ p.description {
   line-height: 1.5;
 }
 
-/* ===== Tlačidlo ===== */
+/* === Tlačidlo === */
 button {
   background: #ffc107;
   color: #222;
@@ -56,7 +58,7 @@ button:hover {
   background: #e0a800;
 }
 
-/* ===== Pre mobily ===== */
+/* === Mobilné optimalizácie === */
 @media (max-width: 600px) {
   body {
     padding: 0 10px;
@@ -74,7 +76,7 @@ button:hover {
   }
 }
 
-/* ===== Oprava problému s odrezaním spodku (mobilné prehliadače) ===== */
+/* === Oprava dolného rezu pre Android/iOS === */
 @supports (-webkit-touch-callout: none) {
   html, body {
     min-height: -webkit-fill-available;

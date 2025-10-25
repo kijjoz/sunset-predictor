@@ -8,17 +8,21 @@ function loadSunset(lat, lon) {
         return;
       }
 
-      // Nastavenie pozadia podľa farieb
+      // Nastavenie pozadia
       if (data.css_colors && data.css_colors.length > 0) {
         const gradient = `linear-gradient(to bottom right, ${data.css_colors.join(", ")})`;
         document.body.style.background = gradient;
       }
 
-      // Výpis údajov
+      // Ak API vrátilo mesto, ale uprednostníme súradnice
+      const locationText = data.location.includes(",")
+        ? data.location
+        : `${data.weather_data.lat.toFixed(2)}, ${data.weather_data.lon.toFixed(2)}`;
+
       document.getElementById("output").innerHTML = `
         <h2>${data.verdict}</h2>
         <p><strong>Dátum:</strong> ${data.date}</p>
-        <p><strong>Miesto:</strong> ${data.location}</p>
+        <p><strong>Miesto:</strong> ${locationText}</p>
         <p><strong>Čas západu:</strong> ${data.sunset_time}</p>
         <p><strong>Farby oblohy:</strong> ${data.colors.join(", ")}</p>
         <p><strong>Skóre:</strong> ${data.score}</p>
@@ -27,7 +31,7 @@ function loadSunset(lat, lon) {
            vlhkosť ${data.weather_data.humidity}%</p>
       `;
     })
-    .catch((err) => {
+    .catch(err => {
       console.error("Chyba API:", err);
       document.getElementById("output").innerHTML =
         "<p>Chyba pri načítaní údajov.</p>";
@@ -40,13 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
   button.addEventListener("click", () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude.toFixed(2);
-          const lon = pos.coords.longitude.toFixed(2);
+        pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
           loadSunset(lat, lon);
         },
         () => {
-          // fallback: Košice
+          // Fallback na Košice
           loadSunset(48.72, 21.26);
         }
       );
@@ -55,6 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // automaticky načíta po otvorení
+  // Načíta automaticky po načítaní
   button.click();
 });
